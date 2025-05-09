@@ -63,7 +63,7 @@ class Founder:
         self.direction = random.choice(possible_directions)
     
     def build(self, maze):
-        # Reset temporary visibility boost when building
+        # Reset temporary visibility boost when ding
         self.temporary_boost = 0
         
         new_x, new_y = self.x, self.y
@@ -109,6 +109,7 @@ class IdeaMaze:
         self.game_over = False
         self.runway = 48  # Runway in months
         self.debug_mode = True  # Debug mode enabled by default
+        self.ai_mode = False  # AI mode disabled by default
         
         # Keep track of which cells have been seen
         self.visited_cells = np.zeros((GRID_SIZE, GRID_SIZE), dtype=bool)
@@ -375,6 +376,12 @@ class IdeaMaze:
                 x + w//2 - button_text.get_width()//2,
                 y + h//2 - button_text.get_height()//2
             ))
+            
+            # Indicate if buttons are disabled in AI mode
+            if self.ai_mode:
+                disabled_overlay = pygame.Surface((w, h), pygame.SRCALPHA)
+                disabled_overlay.fill((0, 0, 0, 128))  # Semi-transparent black
+                self.screen.blit(disabled_overlay, (x, y))
         
         return button_positions
     
@@ -389,7 +396,8 @@ class IdeaMaze:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                elif event.type == pygame.MOUSEBUTTONDOWN and not self.game_won and not self.game_over:
+                # Only process mouse clicks if not in AI mode and game not over
+                elif event.type == pygame.MOUSEBUTTONDOWN and not self.ai_mode and not self.game_won and not self.game_over:
                     mouse_pos = pygame.mouse.get_pos()
                     button_positions = self.draw_buttons()
                     
@@ -459,6 +467,25 @@ class IdeaMaze:
             
             # Draw buttons
             self.draw_buttons()
+            
+            # Draw AI mode indicator if enabled
+            if self.ai_mode:
+                ai_box_width = 180
+                ai_box_height = 40
+                ai_box_x = 20
+                ai_box_y = 20
+                
+                # Draw box
+                ai_box = pygame.Rect(ai_box_x, ai_box_y, ai_box_width, ai_box_height)
+                pygame.draw.rect(self.screen, WHITE, ai_box)
+                pygame.draw.rect(self.screen, BLACK, ai_box, 2)
+                
+                # Draw value
+                ai_text = self.font.render("AI Mode Active", True, BLUE)
+                self.screen.blit(ai_text, (
+                    ai_box_x + 10, 
+                    ai_box_y + ai_box_height//2 - ai_text.get_height()//2
+                ))
             
             # Draw win message if game is won
             if self.game_won:

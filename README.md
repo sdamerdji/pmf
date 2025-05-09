@@ -7,7 +7,7 @@ A simple pygame-based game where you guide a Founder through a maze to reach Pro
 1. Make sure you have Python installed (Python 3.6+ recommended)
 2. Install the required dependencies:
    ```
-   pip install pygame numpy
+   pip install pygame numpy openai
    ```
 
 ## How to Play
@@ -17,6 +17,30 @@ Run the game with:
 ```
 python idea_maze.py
 ```
+
+Or watch an AI play the game:
+
+```
+python ai_player.py
+```
+
+### AI Player Options
+
+There are two AI players available:
+
+1. **OpenAI Player** (default): Uses the OpenAI API to make intelligent decisions
+
+   ```
+   # Set your OpenAI API key
+   export OPENAI_API_KEY=your_api_key_here
+   python ai_player.py
+   ```
+
+2. **DumbPlayer**: Makes random moves (no API key required)
+   ```
+   export PLAYER_TYPE=dumb
+   python ai_player.py
+   ```
 
 ### Game Elements:
 
@@ -56,5 +80,25 @@ Click on one of the buttons to take action:
 
 - **Win**: You win when the Founder reaches the PMF square!
 - **Lose**: You lose when your runway reaches 0 months
+
+### AI Player Mode:
+
+The game includes AI players that can automatically play through the maze:
+
+- AI only sees what would be visible to a human player
+- The AI makes a move every 0.5 seconds
+- User controls are disabled in AI mode
+
+#### OpenAI Player (Intelligent AI):
+
+- Uses OpenAI's API to make informed decisions based on the game state
+- Requires an OpenAI API key set in your environment
+- Makes strategic decisions to find PMF more efficiently
+
+#### DumbPlayer (Random AI):
+
+- Makes completely random moves
+- No API key required
+- Useful for baseline comparison against the intelligent AI
 
 Good luck finding Product-Market Fit before you run out of money!
